@@ -33,7 +33,7 @@ class Config(object):
     # redis key
     REDIS_KEY = "infohash"
     # redis 地址
-    REDIS_HOST = "39.108.218.149"
+    REDIS_HOST = "140.143.208.158"
     # redis 端口
     REDIS_PORT = 6379
     # redis 密码
