@@ -27,7 +27,6 @@
 ### 说明
 
 - 爬虫程序和入库&web搜索程序是两个工程  可以分开部署 根据自己的需求
-
 - 比如有a b c 3台服务器分布部署 爬虫 入库 web搜索 
 
 ### 运行环境
@@ -63,11 +62,11 @@ tail -f nohub.out
 
 运行成功 等待几分钟出现如下输出:
 
-![image-20190120153842915](/Users/Horng/Library/Application%20Support/typora-user-images/image-20190120153842915.png)
+![1](https://xieh1995.github.io/bthello-app/doc/image-20190120153842915.png)
 
 就说明已经在爬取了 同时可以看redis[0] 有无数据
 
-![image-20190120155238627](/Users/Horng/Library/Application%20Support/typora-user-images/image-20190120155238627.png)
+![image-20190120155238627](https://xieh1995.github.io/bthello-app/doc/image-20190120155238627.png)
 
 
 
@@ -111,7 +110,7 @@ python3 main.py -a -port=80
 
 入库程序运行成功日志
 
-![image-20190120154911906](/Users/Horng/Library/Application%20Support/typora-user-images/image-20190120154911906.png)
+![image-20190120154911906](https://xieh1995.github.io/bthello-app/doc/image-20190120154911906.png)
 
 
 
@@ -141,5 +140,4 @@ web搜索可以访问 ip:port
 
 
 
-
-
+最后感谢[DHTSpider](https://github.com/ycwoo/DHTSpider)项目提供了爬虫协议实现
