@@ -19,11 +19,6 @@ class RedisClient:
         self.redis = redis.Redis(connection_pool=conn_pool)
         self.logger = get_logger("logger_redis")
         
-    def add_magnet(self, magnet):
-        """
-        新增磁力链接
-        """
-        self.redis.sadd(Config.REDIS_KEY, magnet)
 
     def add_peer(self,infohash,address):
         """
@@ -40,13 +35,6 @@ class RedisClient:
         """    
         self.redis.set(infohash,metadata)
         print(str(infohash))
-
-
-    def get_magnets(self, count=128):
-        """
-        返回指定数量的磁力链接
-        """
-        return self.redis.srandmember(Config.REDIS_KEY, count)
 
     def get_redis_byKey(self,key,count):
         """

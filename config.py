@@ -30,8 +30,6 @@ class Config(object):
     # MONGO_PORT = int(os.environ.get('MONGO_PORT', '27017'))
 
     ################redis配置##################
-    # redis key
-    REDIS_KEY = "infohash"
     # redis 地址
     REDIS_HOST = "140.143.208.158"
     # redis 端口
