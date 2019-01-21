@@ -112,7 +112,7 @@ def download_metadata(address, infohash, timeout=5):
         if isinstance(metadata.get('name'), str):
             save_metadata(metadata, ''.join(['%02x' % x for x in infohash]).strip())
     except Exception as e:
-        logger.error("download_metadata to redis error >>>> {0}!".format(e))
+        #logger.error("download_metadata to redis error >>>> {0}!".format(e))
         return
     finally:
         the_socket.close()
