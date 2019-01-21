@@ -1,2 +1,1 @@
-mongoengine
 redis==2.10.6
