@@ -9,6 +9,9 @@ from .utils import random_id
 from .bencode import bencode, bdecode
 from .filetype import get_file_type
 from .database import RedisClients
+from .utils import get_logger
+
+logger = get_logger("logger_dht_")
 
 def send_packet(the_socket, msg):
     the_socket.send(msg)
@@ -109,7 +112,7 @@ def download_metadata(address, infohash, timeout=5):
         if isinstance(metadata.get('name'), str):
             save_metadata(metadata, ''.join(['%02x' % x for x in infohash]).strip())
     except Exception as e:
-        #print(e)
+        logger.error("download_metadata to redis error >>>> {0}!".format(e))
         return
     finally:
         the_socket.close()
@@ -155,18 +158,7 @@ def save_metadata(metadata, h):
     metainfo['hot'] = 1
     try:
         RedisClients.set_keyinfo(str(h),metainfo)
+        logger.info("save_metadata to redis successful ! >>>> {0}-{1}!".format(time(),str(h)))
     except Exception as e:
-        print('>>>>' + str(e))
+        logger.error("save_metadata to redis error >>>> {0}!".format(e))
         return
-    # MetadataModel.objects(_id=h).modify(set_on_insert___id=h,
-    #                                     set_on_insert__n=bare_name,
-    #                                     set_on_insert__d=int(time()),
-    #                                     set_on_insert__l=sum(map(lambda y: y.get('l'), files)),
-    #                                     set_on_insert__s=len(files),
-    #                                     set_on_insert__e=1,
-    #                                     set_on_insert__f=file_model,
-    #                                     set_on_insert__t=get_file_type(files),
-    #                                     set__m=int(time()),
-    #                                     inc__c=1,
-    #                                     upsert=True,
-    #                                     new=True)

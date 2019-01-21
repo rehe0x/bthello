@@ -34,7 +34,6 @@ class RedisClient:
         """
         """    
         self.redis.set(infohash,metadata)
-        print(str(infohash))
 
     def get_redis_byKey(self,key,count):
         """
