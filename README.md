@@ -112,6 +112,9 @@ python3 main.py -a -port=80
 
 ![image-20190120154911906](https://xieh1995.github.io/bthello-app/doc/image-20190120154911906.png)
 
+web搜索运行成功页面
+
+![image-20190120154911906](https://xieh1995.github.io/bthello-app/doc/TIM截图20190122113227.jpg)
 
 
 web搜索可以访问 ip:port 
