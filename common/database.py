@@ -19,17 +19,6 @@ class RedisClient:
         self.redis = redis.Redis(connection_pool=conn_pool)
         self.logger = get_logger("logger_redis")
         
-
-    def add_peer(self,infohash,address):
-        """
-        新增磁力peer信息
-        """    
-        self.redis.sadd('peer',str(infohash)+':'+address[0]+':'+str(address[1]))
-        # if (self.redis.exists(infohash) == False):
-        #     self.redis.sadd('peer',str(infohash)+':'+address[0]+':'+str(address[1]))
-        # else:
-        #     self.logger.info("该种子已存在:infohash>{0}".format(infohash))
-
     def set_keyinfo(self,infohash,metadata):
         """
         """    
