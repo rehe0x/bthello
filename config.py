@@ -24,9 +24,9 @@ class Config(object):
     # 绑定端口    
     BIND_PORT = 11158
     # 最大节点数
-    MAX_NODE_SIZE = int(os.environ.get('MAX_NODE_SIZE', '1000'))
+    MAX_NODE_SIZE = int(os.environ.get('MAX_NODE_SIZE', '10000'))
     # 最大下载数
-    DOWNLOAD_THREAD = int(os.environ.get('DOWNLOAD_THREAD', '1000'))
+    DOWNLOAD_THREAD = int(os.environ.get('DOWNLOAD_THREAD', '10000'))
 
     ################mongo配置#################
     # MONGO_HOST = os.environ.get('MONGO_HOST', '140.143.208.158')
