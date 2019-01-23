@@ -2,9 +2,12 @@
 # encoding: utf-8
 
 import os
+from multiprocessing import cpu_count
 
 
 class Config(object):
+    # 是否使用全部进程
+    MAX_PROCESSES = cpu_count() // 2 or cpu_count()
 
     #############node节点#####################
     BOOTSTRAP_NODES = (

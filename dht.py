@@ -2,6 +2,7 @@
 # encoding: utf-8
 
 import socket
+from multiprocessing import Process
 from threading import Thread
 from concurrent.futures import ThreadPoolExecutor
 from time import sleep
@@ -12,6 +13,8 @@ from config import Config
 from common.metadata import download_metadata
 from common.database import RedisClient
 
+logger = get_logger("logger_dht_main")
+
 class KNode(object):
     def __init__(self, nid, ip, port):
         self.nid = nid
@@ -20,10 +23,10 @@ class KNode(object):
 
 
 class DHT(Thread):
-    def __init__(self):
+    def __init__(self,bind_ip,bind_port):
         Thread.__init__(self)
         self.ufd = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
-        self.ufd.bind((Config.BIND_IP, Config.BIND_PORT))
+        self.ufd.bind((bind_ip, bind_port))
 
     def send_krpc(self, msg, address):
         # noinspection PyBroadException
@@ -34,8 +37,10 @@ class DHT(Thread):
 
 
 class DHTClient(DHT):
-    def __init__(self):
-        DHT.__init__(self)
+    def __init__(self,bind_ip,bind_port):
+        DHT.__init__(self,bind_ip,bind_port)
+        self.bind_ip = bind_ip
+        self.bind_port = bind_port
         self.setDaemon(True)
         self.nid = random_id()
         self.nodes = deque(maxlen=Config.MAX_NODE_SIZE)
@@ -78,22 +83,25 @@ class DHTClient(DHT):
             (nid, ip, port) = node
             if len(nid) != 20:
                 continue
-            if ip == Config.BIND_IP:
+            if ip == self.bind_ip:
                 continue
             n = KNode(nid, ip, port)
             self.nodes.append(n)
 
 
 class DHTServer(DHTClient):
-    def __init__(self):
-        DHTClient.__init__(self)
+    def __init__(self,bind_ip, bind_port, process_id):
+        DHTClient.__init__(self,bind_ip,bind_port)
+        self.bind_ip = bind_ip
+        self.bind_port = bind_port
+        self.process_id = process_id
         self.pool = ThreadPoolExecutor(Config.DOWNLOAD_THREAD)
         self.process_request_actions = {
             'get_peers': self.on_get_peers_request,
             'announce_peer': self.on_announce_peer_request,
         }
         self.ufd = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
-        self.ufd.bind((Config.BIND_IP, Config.BIND_PORT))
+        self.ufd.bind((self.bind_ip, self.bind_port))
         timer(Config.REJOIN_DHT_INTERVAL, self.rejoin_dht)
     def run(self):
         self.rejoin_dht()
@@ -147,7 +155,7 @@ class DHTServer(DHTClient):
                     port = address[1]
                 else:
                     port = msg['a']['port']
-                self.pool.submit(download_metadata, (address[0], port), h)
+                self.pool.submit(download_metadata, (address[0], port), h, self.process_id)
         except Exception:
             return
         finally:
@@ -179,3 +187,33 @@ class DHTServer(DHTClient):
             self.send_krpc(msg, address)
         except KeyError:
             pass
+
+def _start_thread(offset):
+    """
+    启动线程
+
+    :param offset: 端口偏移值
+    """
+    logger.info("dht running successful ! {0} ->>>> {1}:{2}".format(offset,Config.BIND_IP,Config.BIND_PORT + offset))
+    dht = DHTServer(Config.BIND_IP, Config.BIND_PORT + offset, offset)
+    dht.start()
+    dht.auto_send_find_node()
+    # t = Thread(target=dht.auto_send_find_node)
+    # t.start()
+    # t.join()
+    # dht.join()
+
+
+def start_server():
+    """
+    多线程启动服务
+    """
+    processes = []
+    for i in range(Config.MAX_PROCESSES):
+        processes.append(Process(target=_start_thread, args=(i,)))
+
+    for p in processes:
+        p.start()
+
+    for p in processes:
+        p.join()
