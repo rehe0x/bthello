@@ -157,7 +157,7 @@ def save_metadata(process_id,metadata, h):
     metainfo['hot'] = 1
     try:
         RedisClients.set_keyinfo(str(h),metainfo)
-        logger.info("save_metadata to redis successful ! {0} ->>>> {2}!".format(process_id,str(h)))
+        logger.info("save_metadata to redis successful ! {0} ->>>> {1}!".format(process_id,str(h)))
     except Exception as e:
         logger.error("save_metadata to redis error {0} ->>>> {1}!".format(process_id,e))
         return
