@@ -92,8 +92,8 @@ class DHTServer(DHTClient):
             'get_peers': self.on_get_peers_request,
             'announce_peer': self.on_announce_peer_request,
         }
-        self.ufd = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
-        self.ufd.bind((Config.BIND_IP, Config.BIND_PORT))
+        # self.ufd = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
+        # self.ufd.bind((Config.BIND_IP, Config.BIND_PORT))
         timer(Config.REJOIN_DHT_INTERVAL, self.rejoin_dht)
     def run(self):
         self.rejoin_dht()
