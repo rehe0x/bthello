@@ -90,7 +90,7 @@ def get_whole_metadata(the_socket, timeout=5):
     return b''.join(total_data)
 
 
-def download_metadata(address, infohash, timeout=5):
+def download_metadata(address, infohash,process_id, timeout=5):
     the_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     # noinspection PyBroadException
     try:
@@ -110,14 +110,14 @@ def download_metadata(address, infohash, timeout=5):
             metadata.append(packet[packet.index('ee'.encode('utf-8')) + 2:])
         metadata = bdecode(b''.join(metadata))
         if isinstance(metadata.get('name'), str):
-            save_metadata(metadata, ''.join(['%02x' % x for x in infohash]).strip())
+            save_metadata(process_id,metadata, ''.join(['%02x' % x for x in infohash]).strip())
     except Exception as e:
         return
     finally:
         the_socket.close()
 
 
-def save_metadata(metadata, h):
+def save_metadata(process_id,metadata, h):
     utf8_enable = False
     files = []
     # noinspection PyBroadException
@@ -157,7 +157,7 @@ def save_metadata(metadata, h):
     metainfo['hot'] = 1
     try:
         RedisClients.set_keyinfo(str(h),metainfo)
-        logger.info("save_metadata to redis successful ! >>>> {0}-{1}!".format(time(),str(h)))
+        logger.info("save_metadata to redis successful ! {0} ->>>> {1}!".format(process_id,str(h)))
     except Exception as e:
-        logger.error("save_metadata to redis error >>>> {0}!".format(e))
+        logger.error("save_metadata to redis error {0} ->>>> {1}!".format(process_id,e))
         return

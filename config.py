@@ -2,10 +2,12 @@
 # encoding: utf-8
 
 import os
+from multiprocessing import cpu_count
 
 
 class Config(object):
-
+    # 是否使用全部进程
+    MAX_PROCESSES = cpu_count() // 2 or cpu_count()
     #############node节点#####################
     BOOTSTRAP_NODES = (
         ('router.bittorrent.com', 6881),
@@ -21,9 +23,9 @@ class Config(object):
     # 绑定端口    
     BIND_PORT = 11158
     # 最大节点数
-    MAX_NODE_SIZE = int(os.environ.get('MAX_NODE_SIZE', '1000'))
+    MAX_NODE_SIZE = int(os.environ.get('MAX_NODE_SIZE', '5000'))
     # 最大下载数
-    DOWNLOAD_THREAD = int(os.environ.get('DOWNLOAD_THREAD', '1000'))
+    DOWNLOAD_THREAD = int(os.environ.get('DOWNLOAD_THREAD', '5000'))
 
     ################mongo配置#################
     # MONGO_HOST = os.environ.get('MONGO_HOST', '140.143.208.158')
