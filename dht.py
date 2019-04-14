@@ -206,7 +206,7 @@ def _start_thread(offset):
 
 def start_server():
     """
-    多线程启动服务
+    多进程启动服务
     """
     processes = []
     for i in range(Config.MAX_PROCESSES):
