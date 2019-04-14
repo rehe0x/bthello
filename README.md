@@ -140,7 +140,3 @@ web搜索可以访问 ip:port
 - 完成web页面相关
 - 优化多线程
 - 优化入库程序避免重复入库
-
-
-
-最后感谢[DHTSpider](https://github.com/ycwoo/DHTSpider)项目提供了爬虫协议实现
